@@ -264,7 +264,7 @@ export default function AdminUsersPage() {
       </div>
 
       {/* ── Stat cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <MiniStat label="Total Users"  value={stats.total}   icon={Users}      />
         <MiniStat label="Sellers"      value={stats.sellers} icon={TrendingUp}  />
         <MiniStat label="Total (page)" value={total}         icon={UserCheck}   />
@@ -340,7 +340,7 @@ export default function AdminUsersPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-180 text-sm">
               <thead>
                 <tr className="bg-slate-50/80 border-b border-slate-100">
                   <th className="px-5 py-3 text-left">

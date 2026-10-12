@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Tag, Users, Store,
@@ -6,6 +6,9 @@ import {
   ChevronRight, UserCog, LifeBuoy, Mail, Package,
 } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import DashboardShellContext from '../DashboardShellContext';
+import PageLoadingContext from '../PageLoadingContext';
+import PageLoadingOverlay from '../PageLoadingOverlay/PageLoadingOverlay';
 
 
 // dashboard are sob page are 20 ta data are besi hole backend theke pagination create korba . and skip kore data gula anba jate load kom hoi .
@@ -49,6 +52,8 @@ export default function AdminDashboardLayout({ children }) {
   const navigate  = useNavigate();
   const location  = useLocation();
   const { currentUser, dbUser, logout } = useAuth();
+  const parentShell = useContext(DashboardShellContext);
+  const isPageLoading = useContext(PageLoadingContext);
 
   const activeId = NAV_ITEMS.find(n => n.path === location.pathname)?.id || 'overview';
 
@@ -89,7 +94,7 @@ export default function AdminDashboardLayout({ children }) {
       </p>
 
       {/* ── Nav links ── */}
-      <nav className="flex flex-col gap-0.5 flex-1">
+      <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
         {NAV_ITEMS.map(item => (
           <NavLink
             key={item.id}
@@ -138,9 +143,11 @@ export default function AdminDashboardLayout({ children }) {
     </div>
   );
 
+  if (parentShell === 'admin') return children;
+
   return (
-    /* Full viewport height, no scroll on outer wrapper */
-    <div className="h-screen bg-[#F1F5F9] flex overflow-hidden">
+    <DashboardShellContext.Provider value="admin">
+    <div className="h-dvh bg-[#F1F5F9] flex overflow-hidden">
 
       {/* ── Mobile backdrop ── */}
       {sidebarOpen && (
@@ -172,7 +179,7 @@ export default function AdminDashboardLayout({ children }) {
           <X size={16} />
         </button>
 
-        <SidebarContent />
+        {SidebarContent()}
       </aside>
 
       {/* ══ MAIN CONTENT AREA ══ */}
@@ -195,10 +202,12 @@ export default function AdminDashboardLayout({ children }) {
         </header>
 
         {/* ── Scrollable page content ── */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-8">
+        <main className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-3 sm:p-5 lg:p-8">
           {children}
+          {isPageLoading && <PageLoadingOverlay className="absolute inset-0 z-10" />}
         </main>
       </div>
     </div>
+    </DashboardShellContext.Provider>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Package, ShoppingBag, Star,
@@ -6,6 +6,9 @@ import {
   BadgeCheck, Paintbrush,
 } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import DashboardShellContext from '../DashboardShellContext';
+import PageLoadingContext from '../PageLoadingContext';
+import PageLoadingOverlay from '../PageLoadingOverlay/PageLoadingOverlay';
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -41,6 +44,8 @@ export default function SellerDashboardLayout({ children }) {
   const navigate  = useNavigate();
   const location  = useLocation();
   const { currentUser, dbUser, logout } = useAuth();
+  const parentShell = useContext(DashboardShellContext);
+  const isPageLoading = useContext(PageLoadingContext);
 
   const activeId = NAV_ITEMS.find(n => n.path === location.pathname)?.id || 'overview';
 
@@ -70,7 +75,7 @@ export default function SellerDashboardLayout({ children }) {
       <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest px-3 mb-2">Seller Menu</p>
 
       {/* Nav links */}
-      <nav className="flex flex-col gap-0.5 flex-1">
+      <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
         {NAV_ITEMS.map(item => (
           <NavLink key={item.id} item={item} active={activeId === item.id} onClick={() => handleNav(item)} />
         ))}
@@ -105,8 +110,11 @@ export default function SellerDashboardLayout({ children }) {
     </div>
   );
 
+  if (parentShell === 'seller') return children;
+
   return (
-    <div className="h-screen bg-[#F1F5F9] flex overflow-hidden">
+    <DashboardShellContext.Provider value="seller">
+    <div className="h-dvh bg-[#F1F5F9] flex overflow-hidden">
       {/* Mobile backdrop */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/60 z-20 lg:hidden backdrop-blur-sm"
@@ -126,7 +134,7 @@ export default function SellerDashboardLayout({ children }) {
           onClick={() => setSidebarOpen(false)}>
           <X size={16} />
         </button>
-        <SidebarContent />
+        {SidebarContent()}
       </aside>
 
       {/* Main */}
@@ -145,10 +153,12 @@ export default function SellerDashboardLayout({ children }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-8">
+        <main className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-3 sm:p-5 lg:p-8">
           {children}
+          {isPageLoading && <PageLoadingOverlay className="absolute inset-0 z-10" />}
         </main>
       </div>
     </div>
+    </DashboardShellContext.Provider>
   );
 }

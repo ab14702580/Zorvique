@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import HomePage from '../Pages/HomePage/HomePage';
 import HomePageDesign from '../Component/HomePageLayout/HomePageDesign';
 import ProductsPage from '../Pages/ProductsPage/ProductsPage';
@@ -15,6 +15,9 @@ import RegisterPage from '../Pages/RegisterPage/RegisterPage';
 import ProtectedRoute, { AdminRoute, SellerRoute } from '../Component/ProtectedRoute/ProtectedRoute';
 import PublicPrivacyPolicyPage from '../Pages/PrivacyPolicyPage/PrivacyPolicyPage';
 import PageLoadingBoundary from '../Component/PageLoadingBoundary/PageLoadingBoundary';
+import DashboardLayout from '../Component/DashboardLayout/DashboardLayout';
+import SellerDashboardLayout from '../Component/SellerDashboardLayout/SellerDashboardLayout';
+import AdminDashboardLayout from '../Component/AdminDashboardLayout/AdminDashboardLayout';
 
 // ── User Dashboard pages ──────────────────────────────────────────────────────
 import DashboardPage              from '../Pages/DashboardPage/DashboardPage';
@@ -67,40 +70,58 @@ const router = createBrowserRouter([
   { path: '/privacy-policy', element: <PublicPrivacyPolicyPage /> },
 
   // ── Admin routes (role: admin only) ─────────────────────────────────────────
-  { path: '/admin',               element: adminProtect(<AdminOverviewPage />) },
-  { path: '/admin/users',         element: adminProtect(<AdminUsersPage />) },
-  { path: '/admin/categories',    element: adminProtect(<AdminCategoriesPage />) },
-  { path: '/admin/products',      element: adminProtect(<AdminProductsPage />) },
-  { path: '/admin/sellers',       element: adminProtect(<AdminSellersPage />) },
-  { path: '/admin/shop-requests', element: adminProtect(<AdminShopRequestsPage />) },
-  { path: '/admin/orders',        element: adminProtect(<AdminOrdersPage />) },
-  { path: '/admin/support',       element: adminProtect(<AdminSupportPage />) },
-  { path: '/admin/contact',       element: adminProtect(<AdminContactPage />) },
+  {
+    path: '/admin',
+    element: adminProtect(<AdminDashboardLayout><Outlet /></AdminDashboardLayout>),
+    children: [
+      { index: true, element: <AdminOverviewPage /> },
+      { path: 'users', element: <AdminUsersPage /> },
+      { path: 'categories', element: <AdminCategoriesPage /> },
+      { path: 'products', element: <AdminProductsPage /> },
+      { path: 'sellers', element: <AdminSellersPage /> },
+      { path: 'shop-requests', element: <AdminShopRequestsPage /> },
+      { path: 'orders', element: <AdminOrdersPage /> },
+      { path: 'support', element: <AdminSupportPage /> },
+      { path: 'contact', element: <AdminContactPage /> },
+    ],
+  },
 
   // ── User dashboard routes (any logged-in user) ───────────────────────────────
-  { path: '/dashboard',           element: protect(<DashboardPage />) },
-  { path: '/dashboard/orders',    element: protect(<OrderHistoryPage />) },
-  { path: '/dashboard/digital',   element: protect(<MyDigitalProductsPage />) },
-  { path: '/dashboard/preorders', element: protect(<PreOrdersPage />) },
-  { path: '/dashboard/returns',   element: protect(<ReturnOrdersPage />) },
-  { path: '/dashboard/wishlist',  element: protect(<WishlistPage />) },
-  { path: '/dashboard/message',   element: protect(<MessagePage />) },
-  { path: '/dashboard/profile',   element: protect(<MyProfilePage />) },
-  { path: '/dashboard/address',   element: protect(<ManageAddressPage />) },
-  { path: '/dashboard/support',   element: protect(<SupportTicketPage />) },
-  { path: '/dashboard/password',  element: protect(<ChangePasswordPage />) },
-  { path: '/dashboard/terms',     element: protect(<TermsConditionsPage />) },
-  { path: '/dashboard/privacy',          element: protect(<PrivacyPolicyPage />) },
-  { path: '/dashboard/become-seller',    element: protect(<BecomeSellerPage />) },
-  { path: '/dashboard/reviews',          element: protect(<MyReviewsPage />) },
+  {
+    path: '/dashboard',
+    element: protect(<DashboardLayout><Outlet /></DashboardLayout>),
+    children: [
+      { index: true, element: <DashboardPage /> },
+      { path: 'orders', element: <OrderHistoryPage /> },
+      { path: 'digital', element: <MyDigitalProductsPage /> },
+      { path: 'preorders', element: <PreOrdersPage /> },
+      { path: 'returns', element: <ReturnOrdersPage /> },
+      { path: 'wishlist', element: <WishlistPage /> },
+      { path: 'message', element: <MessagePage /> },
+      { path: 'profile', element: <MyProfilePage /> },
+      { path: 'address', element: <ManageAddressPage /> },
+      { path: 'support', element: <SupportTicketPage /> },
+      { path: 'password', element: <ChangePasswordPage /> },
+      { path: 'terms', element: <TermsConditionsPage /> },
+      { path: 'privacy', element: <PrivacyPolicyPage /> },
+      { path: 'become-seller', element: <BecomeSellerPage /> },
+      { path: 'reviews', element: <MyReviewsPage /> },
+    ],
+  },
 
   // ── Seller Dashboard routes (role: seller only) ───────────────────────────────
-  { path: '/seller',          element: sellerProtect(<SellerOverviewPage />) },
-  { path: '/seller/products', element: sellerProtect(<SellerProductsPage />) },
-  { path: '/seller/orders',   element: sellerProtect(<SellerOrdersPage />) },
-  { path: '/seller/reviews',  element: sellerProtect(<SellerReviewsPage />) },
-  { path: '/seller/store',    element: sellerProtect(<SellerStorePage />) },
-  { path: '/seller/decorate', element: sellerProtect(<SellerDecoratePage />) },
+  {
+    path: '/seller',
+    element: sellerProtect(<SellerDashboardLayout><Outlet /></SellerDashboardLayout>),
+    children: [
+      { index: true, element: <SellerOverviewPage /> },
+      { path: 'products', element: <SellerProductsPage /> },
+      { path: 'orders', element: <SellerOrdersPage /> },
+      { path: 'reviews', element: <SellerReviewsPage /> },
+      { path: 'store', element: <SellerStorePage /> },
+      { path: 'decorate', element: <SellerDecoratePage /> },
+    ],
+  },
 
   // ── Main site ────────────────────────────────────────────────────────────────
   {

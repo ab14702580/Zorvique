@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -22,6 +22,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import MainHeader from '../HomePageLayout/MainHeader';
+import DashboardShellContext from '../DashboardShellContext';
+import PageLoadingContext from '../PageLoadingContext';
+import PageLoadingOverlay from '../PageLoadingOverlay/PageLoadingOverlay';
 
 // ─── Nav items config ─────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -75,6 +78,8 @@ export default function DashboardLayout({ children, activeId }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, dbUser, logout } = useAuth();
+  const parentShell = useContext(DashboardShellContext);
+  const isPageLoading = useContext(PageLoadingContext);
 
   // derive active from prop or current path
   const currentActive = activeId
@@ -179,7 +184,10 @@ export default function DashboardLayout({ children, activeId }) {
     </div>
   );
 
+  if (parentShell === 'user') return children;
+
   return (
+    <DashboardShellContext.Provider value="user">
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* ── Top Navbar (MainHeader) ── */}
@@ -228,16 +236,18 @@ export default function DashboardLayout({ children, activeId }) {
               <X size={18} />
             </button>
 
-            <SidebarContent />
+            {SidebarContent()}
           </aside>
 
           {/* ══ MAIN CONTENT ══ */}
-          <main className="flex-1 flex flex-col gap-4 min-w-0 w-full">
+          <main className="relative flex-1 flex flex-col gap-4 min-w-0 w-full">
             {children}
+            {isPageLoading && <PageLoadingOverlay className="absolute inset-0 z-10" />}
           </main>
 
         </div>
       </div>
     </div>
+    </DashboardShellContext.Provider>
   );
 }
