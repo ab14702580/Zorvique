@@ -14,6 +14,7 @@ import LoginPage from '../Pages/LoginPage/LoginPage';
 import RegisterPage from '../Pages/RegisterPage/RegisterPage';
 import ProtectedRoute, { AdminRoute, SellerRoute } from '../Component/ProtectedRoute/ProtectedRoute';
 import PublicPrivacyPolicyPage from '../Pages/PrivacyPolicyPage/PrivacyPolicyPage';
+import PageLoadingBoundary from '../Component/PageLoadingBoundary/PageLoadingBoundary';
 
 // ── User Dashboard pages ──────────────────────────────────────────────────────
 import DashboardPage              from '../Pages/DashboardPage/DashboardPage';
@@ -57,6 +58,9 @@ const adminProtect = (el) => <AdminRoute>{el}</AdminRoute>;
 const sellerProtect= (el) => <SellerRoute>{el}</SellerRoute>;
 
 const router = createBrowserRouter([
+  {
+    element: <PageLoadingBoundary />,
+    children: [
   // ── Public ──────────────────────────────────────────────────────────────────
   { path: '/login',          element: <LoginPage /> },
   { path: '/register',       element: <RegisterPage /> },
@@ -113,6 +117,8 @@ const router = createBrowserRouter([
       { path: 'blog',        element: <BlogPage /> },
       { path: 'categories',  element: <CategoriesPage /> },
       { path: 'checkout',    element: <CheckoutPage /> },
+    ],
+  },
     ],
   },
 ]);
