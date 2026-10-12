@@ -212,7 +212,7 @@ export default function SellerOrdersPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-180 text-sm">
               <thead>
                 <tr className="bg-slate-50">
                   {['Order', 'Buyer', 'Amount', 'Status', 'Payment', 'Update Status', 'Actions'].map(h => (

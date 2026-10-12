@@ -119,7 +119,7 @@ export default function SellerOverviewPage() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 mb-8">
         <StatCard label="Products"       value={stats?.totalProducts ?? 0}             icon={Package}     color="bg-indigo-500"   sub="Listed" />
         <StatCard label="Total Orders"   value={stats?.totalOrders ?? 0}               icon={ShoppingBag} color="bg-amber-500"    sub="All time" />
         <StatCard label="Pending Orders" value={stats?.pendingOrders ?? 0}             icon={Clock}       color="bg-rose-500"     sub="Need action" />
@@ -188,7 +188,7 @@ export default function SellerOverviewPage() {
           <div className="flex items-center justify-center h-32 text-sm text-slate-400">No orders yet</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-160 text-sm">
               <thead>
                 <tr className="bg-slate-50">
                   {['Order ID', 'Buyer', 'Items', 'Amount', 'Status'].map(h => (
