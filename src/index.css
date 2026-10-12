@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* ── Global font ── */
+*, *::before, *::after {
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
