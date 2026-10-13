@@ -1,4 +1,4 @@
-import { ShoppingCart, Star, Clock, Heart } from "lucide-react";
+import { ShoppingCart, Star, Clock, Heart, Package, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
@@ -60,7 +60,7 @@ function ProductCard({ product, viewMode }) {
         <div className="w-24 h-20 bg-[#F9FAFB] rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
           {image
             ? <img src={image} alt={title} className="w-full h-full object-cover" />
-            : <span className="text-4xl">📦</span>
+            : <Package size={28} className="text-[#CBD5E1]" />
           }
         </div>
 
@@ -92,8 +92,9 @@ function ProductCard({ product, viewMode }) {
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); addToCart({ ...product, id }); }}
-            className="w-8 h-8 flex items-center justify-center rounded border border-[#E5E7EB] hover:border-[#E11D48] transition-colors cursor-pointer">
-            <ShoppingCart size={14} strokeWidth={1.5} className={isInCart ? "text-[#E11D48]" : "text-[#4B5563]"} />
+            className="w-8 h-8 flex items-center justify-center rounded border transition-colors cursor-pointer"
+            style={isInCart ? { background: "#E11D48", borderColor: "#E11D48" } : { borderColor: "#E5E7EB" }}>
+            <ShoppingCart size={14} strokeWidth={1.5} className={isInCart ? "text-white" : "text-[#4B5563]"} />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/product/${id}`); }}
@@ -138,7 +139,7 @@ function ProductCard({ product, viewMode }) {
       <div className="flex items-center justify-center h-44 bg-[#F9FAFB] rounded-md mb-3 overflow-hidden">
         {image
           ? <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
-          : <span className="text-7xl transition-transform duration-200 group-hover:scale-110">📦</span>
+          : <Package size={52} className="text-[#CBD5E1] transition-transform duration-200 group-hover:scale-110" />
         }
       </div>
 
@@ -164,8 +165,9 @@ function ProductCard({ product, viewMode }) {
       <div className="flex items-center gap-2 pt-2">
         <button
           onClick={(e) => { e.stopPropagation(); addToCart({ ...product, id }); }}
-          className="w-8 h-8 flex items-center justify-center rounded border border-[#E5E7EB] hover:border-[#E11D48] transition-colors shrink-0 cursor-pointer">
-          <ShoppingCart size={14} strokeWidth={1.5} className={isInCart ? "text-[#E11D48]" : "text-[#4B5563]"} />
+          className="w-8 h-8 flex items-center justify-center rounded border transition-colors shrink-0 cursor-pointer"
+          style={isInCart ? { background: "#E11D48", borderColor: "#E11D48" } : { borderColor: "#E5E7EB" }}>
+          <ShoppingCart size={14} strokeWidth={1.5} className={isInCart ? "text-white" : "text-[#4B5563]"} />
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); navigate(`/product/${id}`); }}
@@ -182,7 +184,7 @@ export default function ProductGrid({ products, viewMode }) {
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-[#9CA3AF]">
-        <span className="text-6xl mb-4">🔍</span>
+        <Search size={36} className="mb-4 text-[#94A3B8]" />
         <p className="text-[16px] font-semibold text-[#374151]">No products found</p>
         <p className="text-[13px] mt-1">Try adjusting your filters</p>
       </div>

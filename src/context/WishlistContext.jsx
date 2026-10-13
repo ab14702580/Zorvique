@@ -25,7 +25,10 @@ export function WishlistProvider({ children }) {
   // NOTE: login guard is handled at the component level — caller should check
   // isAuthenticated and navigate to /login before calling toggleWishlist.
   const toggleWishlist = useCallback(async (product) => {
-    if (!isAuthenticated || !currentUser?.email) return;
+    if (!isAuthenticated || !currentUser?.email) {
+      window.location.assign('/login');
+      return;
+    }
 
     const email    = currentUser.email;
     const pid      = product._id || product.id;

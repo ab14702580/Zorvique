@@ -34,6 +34,7 @@ function StarRating({ rating, max = 5, size = 'sm' }) {
 function RelatedProductCard({ product }) {
   const { addToCart, inCart } = useCart();
   const navigate = useNavigate();
+
   const pid      = product._id || product.id;
   const isInCart = inCart(pid);
 
@@ -76,11 +77,11 @@ function RelatedProductCard({ product }) {
               addToCart({ ...product, id: pid, _id: pid }, 1);
             }}
             className={`flex items-center justify-center w-6 h-6 border rounded transition-colors cursor-pointer ${
-              isInCart ? 'border-rose-400 bg-rose-50' : 'border-slate-200'
+              isInCart ? 'border-rose-500 bg-rose-500' : 'border-slate-200 bg-white'
             }`}
             aria-label="Add to cart"
           >
-            <ShoppingCart className={`w-3 h-3 ${isInCart ? 'text-rose-500' : 'text-slate-500'}`} />
+            <ShoppingCart className={`w-3 h-3 ${isInCart ? 'text-white' : 'text-slate-500'}`} />
           </button>
           <button
             type="button"
@@ -137,6 +138,10 @@ export default function ProductDetailPage() {
   const [shopRating,    setShopRating]    = useState(null);  // seller's live avg rating
   const [reviews,       setReviews]       = useState([]);
   const [reviewsLoaded, setReviewsLoaded] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [id]);
 
   // ── Fetch product ────────────────────────────────────────────────────────────
   useEffect(() => {

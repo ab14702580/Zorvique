@@ -4,7 +4,7 @@ import {
   Home, ChevronRight, Zap, MapPin, ShieldCheck,
   Lock, CreditCard, Truck, Leaf, Package, Wallet,
   Landmark, Tag, CheckCircle2, ArrowRight,
-  ShoppingCart, Info, Loader2, AlertCircle,
+  ShoppingCart, Info, Loader2, AlertCircle, Minus, Plus,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { useAuth } from "../../context/useAuth";
@@ -169,7 +169,7 @@ function OrderConfirmation({ orderId, total, onContinue }) {
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const { currentUser, dbUser, isAuthenticated } = useAuth();
-  const { items: cartItems, totalPrice, clearCart } = useCart();
+  const { items: cartItems, clearCart, updateQty } = useCart();
 
   // Redirect if not logged in or cart empty
   useEffect(() => {
@@ -267,11 +267,18 @@ export default function CheckoutPage() {
   };
 
   // ── Totals ────────────────────────────────────────────────────────────────
+  const priceForLocation = (product) => {
+    const cityKey = shipping.city.trim().toLowerCase();
+    const cityPrices = product.locationPrices || {};
+    const matchedPrice = Object.entries(cityPrices).find(([city]) => city.toLowerCase() === cityKey)?.[1];
+    return Number(matchedPrice ?? product.price ?? 0);
+  };
+  const checkoutSubtotal = cartItems.reduce((sum, { product, qty }) => sum + priceForLocation(product) * qty, 0);
   const deliveryCost = DELIVERY_OPTIONS.find(d => d.id === selectedDelivery)?.cost || 0;
   const promoRate    = promoApplied ? (PROMO_CODES[promoApplied]?.discount || 0) : 0;
-  const discount     = totalPrice * promoRate;
-  const tax          = (totalPrice - discount) * 0.05;
-  const total        = totalPrice - discount + deliveryCost + tax;
+  const discount     = checkoutSubtotal * promoRate;
+  const tax          = (checkoutSubtotal - discount) * 0.05;
+  const total        = checkoutSubtotal - discount + deliveryCost + tax;
 
   // ── Place order ───────────────────────────────────────────────────────────
   const handlePlaceOrder = async () => {
@@ -297,7 +304,7 @@ export default function CheckoutPage() {
           productId: product._id || product.id,
           name:      product.title || product.name,
           qty,
-          price:     product.price || 0,
+          price:     priceForLocation(product),
           image:     product.productImg || product.image || "",
         });
       });
@@ -542,6 +549,7 @@ export default function CheckoutPage() {
                 <div className="flex flex-col gap-3.5 max-h-[240px] overflow-y-auto pr-1">
                   {cartItems.map(({ product, qty }, i) => {
                     const img = product.productImg || product.image;
+                    const itemPrice = priceForLocation(product);
                     return (
                       <div key={i} className="flex items-center gap-4">
                         <div className="relative w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-[#E5EEFF] border border-[#DCE9FF]/60 overflow-hidden">
@@ -556,8 +564,13 @@ export default function CheckoutPage() {
                           {product.selectedColor && (
                             <p className="text-[11px] text-[#5C3F40] mt-0.5">{product.selectedColor}{product.selectedSize ? ` · ${product.selectedSize}` : ""}</p>
                           )}
+                          <div className="flex items-center gap-1 mt-2">
+                            <button type="button" onClick={() => updateQty(product._id || product.id, qty - 1)} aria-label="Decrease quantity" className="w-6 h-6 grid place-items-center border border-[#DCE9FF] rounded"><Minus size={11} /></button>
+                            <span className="w-6 text-center text-xs font-semibold">{qty}</span>
+                            <button type="button" onClick={() => updateQty(product._id || product.id, qty + 1)} aria-label="Increase quantity" className="w-6 h-6 grid place-items-center border border-[#DCE9FF] rounded"><Plus size={11} /></button>
+                          </div>
                         </div>
-                        <p className="text-[13px] font-bold text-[#0B1C30] shrink-0">{fmt(product.price * qty)}</p>
+                        <p className="text-[13px] font-bold text-[#0B1C30] shrink-0">{fmt(itemPrice * qty)}</p>
                       </div>
                     );
                   })}
@@ -608,7 +621,7 @@ export default function CheckoutPage() {
               {/* Price breakdown */}
               <div className="flex flex-col gap-2.5">
                 {[
-                  ["Subtotal",   fmt(totalPrice)],
+                  ["Subtotal",   fmt(checkoutSubtotal)],
                   promoApplied && [`Discount (${Math.round(promoRate * 100)}%)`, `−${fmt(discount)}`],
                   ["Delivery",   deliveryCost === 0 ? "Free" : fmt(deliveryCost)],
                   ["Tax (5%)",   fmt(tax)],

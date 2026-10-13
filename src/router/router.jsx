@@ -10,6 +10,7 @@ import BlogPage from '../Pages/BlogPage/BlogPage';
 import ProductDetailPage from '../Pages/ProductDetailPage/ProductDetailPage';
 import CategoriesPage from '../Pages/CategoriesPage/CategoriesPage';
 import CheckoutPage from '../Pages/CheckoutPage/CheckoutPage';
+import CartPage from '../Pages/CartPage/CartPage';
 import LoginPage from '../Pages/LoginPage/LoginPage';
 import RegisterPage from '../Pages/RegisterPage/RegisterPage';
 import ProtectedRoute, { AdminRoute, SellerRoute } from '../Component/ProtectedRoute/ProtectedRoute';
@@ -54,6 +55,7 @@ import AdminOrdersPage            from '../Pages/AdminDashboard/AdminOrdersPage'
 import AdminUsersPage             from '../Pages/AdminDashboard/AdminUsersPage';
 import AdminSupportPage           from '../Pages/AdminDashboard/AdminSupportPage';
 import AdminContactPage           from '../Pages/AdminDashboard/AdminContactPage';
+import NotFoundPage               from '../Pages/NotFoundPage/NotFoundPage';
 
 // ── Route helpers ─────────────────────────────────────────────────────────────
 const protect      = (el) => <ProtectedRoute>{el}</ProtectedRoute>;
@@ -137,9 +139,11 @@ const router = createBrowserRouter([
       { path: 'contact',     element: <ContactPage /> },
       { path: 'blog',        element: <BlogPage /> },
       { path: 'categories',  element: <CategoriesPage /> },
+      { path: 'cart',       element: <CartPage /> },
       { path: 'checkout',    element: <CheckoutPage /> },
     ],
   },
+  { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);

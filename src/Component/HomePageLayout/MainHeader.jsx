@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ChevronDown, ChevronRight, Search, Heart, ShoppingCart, User,
   Store, Menu, X, MoreVertical, Home, Package, ShoppingBag,
@@ -137,6 +137,15 @@ export default function MainHeader() {
   const { totalWishlist } = useWishlist();
   const categories = useNavCategories();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
+
+  useEffect(() => {
+    const query = searchTerm.trim();
+    if (!query) return;
+    const timer = setTimeout(() => navigate(`/products?q=${encodeURIComponent(query)}`), 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm, navigate]);
 
   /* ── sticky + shadow on scroll ── */
   const [scrolled, setScrolled] = useState(false);
@@ -221,10 +230,15 @@ export default function MainHeader() {
           <div className="flex items-stretch h-9 md:h-10 border-2 border-[#E2E8F0] rounded-lg overflow-hidden">
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") navigate(`/products?q=${encodeURIComponent(searchTerm.trim())}`); }}
               placeholder="Search products..."
               className="flex-1 min-w-0 px-3 md:px-4 text-sm text-[#1E293B] placeholder-[#94A3B8] outline-none bg-white"
             />
             <button
+              type="button"
+              onClick={() => navigate(`/products?q=${encodeURIComponent(searchTerm.trim())}`)}
               className="flex items-center justify-center w-10 md:w-14 bg-[#F43F5E] hover:bg-[#E11D48] transition-colors shrink-0"
               aria-label="Search"
             >
@@ -287,7 +301,7 @@ export default function MainHeader() {
               {/* Sign out */}
               <button
                 type="button"
-                onClick={async () => { await logout(); navigate('/'); }}
+                onClick={async () => { await logout(); navigate('/login'); }}
                 className="flex items-center cursor-pointer gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold text-[#EF4444] hover:bg-red-50 transition-colors border border-red-200"
               >
                 <LogOut size={14} strokeWidth={2} />

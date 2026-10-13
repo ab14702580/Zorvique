@@ -156,6 +156,13 @@ export default function CartDrawer() {
             </div>
 
             <Link
+              to="/cart"
+              onClick={() => setDrawerOpen(false)}
+              className="block w-full py-2 border border-[#E2E8F0] text-[#334155] text-[13px] font-semibold rounded-xl text-center hover:border-[#E11D48] hover:text-[#E11D48] transition-colors"
+            >
+              View cart
+            </Link>
+            <Link
               to="/checkout"
               onClick={() => setDrawerOpen(false)}
               className="block w-full py-3 bg-[#E11D48] text-white text-[13px] font-bold rounded-xl text-center hover:bg-[#BE185D] transition-colors shadow-[0_2px_8px_rgba(225,29,72,0.25)]"

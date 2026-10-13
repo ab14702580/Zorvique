@@ -1,15 +1,26 @@
-import { Store, Phone, Mail, Apple, Play } from "lucide-react";
+import {
+  Store,
+  Phone,
+  Mail,
+  Apple,
+  MessageCircle,
+  Send,
+  Globe,
+  Play,
+  Sparkles,
+  ShoppingBag,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const socials = [
-  { label: "f",  bg: "#1877F2", title: "Facebook" },
-  { label: "in", bg: "#0A66C2", title: "LinkedIn" },
-  { label: "ig", bg: "linear-gradient(45deg,#FBBF24 0%,#F43F5E 50%,#9333EA 100%)", title: "Instagram" },
-  { label: "▶", bg: "#FF0000", title: "YouTube" },
-  { label: "w",  bg: "#25D366", title: "WhatsApp" },
-  { label: "𝕏",  bg: "#000000", title: "X (Twitter)" },
-  { label: "✈",  bg: "#229ED9", title: "Telegram" },
-  { label: "G+", bg: "#EA4335", title: "Google+" },
+  { icon: Globe, bg: "#1877F2", title: "Website" },
+  { icon: ShoppingBag, bg: "#0A66C2", title: "Shop" },
+  { icon: Sparkles, bg: "linear-gradient(45deg,#FBBF24 0%,#F43F5E 50%,#9333EA 100%)", title: "Beauty" },
+  { icon: Play, bg: "#FF0000", title: "Video" },
+  { icon: MessageCircle, bg: "#25D366", title: "Support" },
+  { icon: Send, bg: "#000000", title: "Updates" },
+  { icon: Globe, bg: "#229ED9", title: "Community" },
+  { icon: Sparkles, bg: "#EA4335", title: "Care" },
 ];
 
 const shopLinks      = ["All Products", "Digital Products", "Top Rated Products", "Best Deals"];
@@ -94,27 +105,30 @@ export default function Footer() {
               The ultimate all-in-one solution for your eCommerce business worldwide.
             </p>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2.5">
+              <a href="tel:+8801700000000" className="flex items-center gap-2.5 hover:text-[#F43F5E]">
                 <div className="w-6 h-6 rounded-full bg-[#FFE4E6] flex items-center justify-center shrink-0">
                   <Phone size={13} strokeWidth={1.5} className="text-[#F43F5E]" />
                 </div>
-                <span className="text-[12px] text-[#475569]">+880123456789</span>
-              </div>
-              <div className="flex items-center gap-2.5">
+                <span className="text-[12px] text-[#475569]">+8801700000000</span>
+              </a>
+              <a href="mailto:support@readyecommerce.com" className="flex items-center gap-2.5 hover:text-[#F43F5E]">
                 <div className="w-6 h-6 rounded-full bg-[#FFE4E6] flex items-center justify-center shrink-0">
                   <Mail size={13} strokeWidth={1.5} className="text-[#F43F5E]" />
                 </div>
-                <span className="text-[12px] text-[#475569]">admin@example.com</span>
-              </div>
+                <span className="text-[12px] text-[#475569]">support@readyecommerce.com</span>
+              </a>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              {socials.map((s) => (
-                <button key={s.title} aria-label={s.title}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
-                  style={{ background: s.bg }}>
-                  {s.label}
-                </button>
-              ))}
+              {socials.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <button key={s.title} aria-label={s.title}
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-white shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+                    style={{ background: s.bg }}>
+                    <Icon size={14} strokeWidth={2} />
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -131,29 +145,21 @@ export default function Footer() {
           <div className="col-span-2 sm:col-span-1 flex flex-col gap-3">
             <h4 className="text-[13px] md:text-[14px] font-bold text-[#1E293B] tracking-[-0.35px]">Download Our App</h4>
             <div className="flex flex-col gap-2.5">
-              <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black hover:bg-[#1a1a1a] transition-colors cursor-pointer"
+              <a href="#" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black hover:bg-[#1a1a1a] transition-colors"
                 style={{ border: "1px solid #000" }}>
                 <Apple size={18} strokeWidth={1.5} className="text-white shrink-0" />
                 <div className="flex flex-col">
                   <span className="text-[8px] text-[#CBD5E1] leading-none">Available on the</span>
                   <span className="text-[11px] md:text-[12px] font-semibold text-white leading-4">App Store</span>
                 </div>
-              </button>
-              <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black hover:bg-[#1a1a1a] transition-colors cursor-pointer"
-                style={{ border: "1px solid #000" }}>
-                <Play size={18} strokeWidth={1.5} className="text-white shrink-0 fill-white" />
-                <div className="flex flex-col">
-                  <span className="text-[8px] text-[#CBD5E1] leading-none uppercase tracking-wide">GET IT ON</span>
-                  <span className="text-[11px] md:text-[12px] font-semibold text-white leading-4">Google Play</span>
-                </div>
-              </button>
+              </a>
             </div>
           </div>
         </div>
 
         {/* Payment Methods */}
-        <div className="flex flex-col gap-3 pt-6" style={{ borderTop: "1px solid rgba(254,205,211,0.6)" }}>
-          <h5 className="text-[12px] font-bold text-[#1E293B]">Accepted Payment Methods</h5>
+        <div className="flex flex-col gap-3 p-5 md:p-6 rounded-xl bg-[#172033] text-white">
+          <h5 className="text-[12px] font-bold">Accepted Payment Methods</h5>
           <div className="flex flex-wrap items-center gap-2">
             {payments.map((p) => (
               <span key={p.name} className="px-2 py-[3px] rounded text-[10px] md:text-[11px] font-bold bg-white"
@@ -167,7 +173,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="flex items-center justify-center pt-4" style={{ borderTop: "1px solid rgba(254,205,211,0.5)" }}>
           <p className="text-[11px] md:text-[12px] text-[#64748B] text-center">
-            © {year} All right reserved by company
+            {year} developed by <span className="font-semibold text-[#F43F5E]">Abdullah</span>.
           </p>
         </div>
       </div>

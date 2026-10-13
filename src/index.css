@@ -8,3 +8,16 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+
+@keyframes category-marquee {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.animate-category-marquee {
+  animation: category-marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-category-marquee { animation: none; }
+}

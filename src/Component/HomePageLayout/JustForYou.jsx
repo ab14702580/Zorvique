@@ -81,9 +81,9 @@ function JustForYouCard({ product }) {
         <div className="flex items-center gap-1.5 pt-1">
           <button
             onClick={(e) => { e.stopPropagation(); addToCart({ ...product, id }); }}
-            className="w-8 h-8 flex items-center justify-center rounded-md shrink-0 transition-colors hover:bg-[#E2E8F0] cursor-pointer"
-            style={{ background: "#F1F5F9" }}>
-            <ShoppingCart size={15} strokeWidth={1.2} className={isInCart ? "text-[#F43F5E]" : "text-[#475569]"} />
+            className="w-8 h-8 flex items-center justify-center rounded-md shrink-0 transition-colors cursor-pointer"
+            style={isInCart ? { background: "#E11D48" } : { background: "#F1F5F9" }}>
+            <ShoppingCart size={15} strokeWidth={1.2} className={isInCart ? "text-white" : "text-[#475569]"} />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); navigate(`/product/${id}`); }}

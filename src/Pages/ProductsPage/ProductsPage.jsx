@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { LayoutGrid, List, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { LayoutGrid, List, SlidersHorizontal, X, ChevronDown, SearchX } from "lucide-react";
 import FilterSidebar from "../../Component/ProductsLayout/FilterSidebar";
 import ProductGrid from "../../Component/ProductsLayout/ProductGrid";
 import api from "../../api/axios";
@@ -32,6 +32,7 @@ export default function ProductsPage() {
   const urlCategory = searchParams.get("category") || "";
   const urlBrand    = searchParams.get("brand")    || "";
   const urlTag      = searchParams.get("tag")      || "";
+  const urlSearch   = searchParams.get("q")         || "";
 
   // ── Fetch ────────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -62,6 +63,12 @@ export default function ProductsPage() {
   // ── Apply filters ─────────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     let list = [...allProducts];
+
+    if (urlSearch) {
+      const query = urlSearch.toLowerCase();
+      list = list.filter((p) => [p.title, p.name, p.description, p.category, p.brand]
+        .some((value) => String(value || "").toLowerCase().includes(query)));
+    }
 
     // URL tag pre-filter (flash, popular, etc.)
     if (urlTag) list = list.filter((p) => (p.tags || []).includes(urlTag));
@@ -98,7 +105,7 @@ export default function ProductsPage() {
       new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
     return list;
-  }, [allProducts, filters, urlTag]);
+  }, [allProducts, filters, urlTag, urlSearch]);
 
   // ── Pagination ────────────────────────────────────────────────────────────────
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -120,7 +127,7 @@ export default function ProductsPage() {
     price: { min: 0, max: priceMax },
   }));
 
-  const pageTitle = urlCategory || (urlTag ? `${urlTag.charAt(0).toUpperCase() + urlTag.slice(1)} Sale` : "All Products");
+  const pageTitle = urlSearch ? `Search: ${urlSearch}` : urlCategory || (urlTag ? `${urlTag.charAt(0).toUpperCase() + urlTag.slice(1)} Sale` : "All Products");
 
   // ── Skeleton ──────────────────────────────────────────────────────────────────
   const Skeleton = () => (
@@ -213,7 +220,24 @@ export default function ProductsPage() {
               </div>
             )}
 
-            {loading ? <Skeleton /> : <ProductGrid products={paginated} viewMode={viewMode} />}
+            {loading ? <Skeleton /> : filtered.length === 0 ? (
+              <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border border-dashed border-[#E2E8F0] bg-white px-6 py-12 text-center shadow-sm">
+                <SearchX size={48} className="text-[#E11D48]" strokeWidth={1.5} />
+                <h2 className="mt-4 text-xl font-bold text-[#0F172A]">No products found</h2>
+                <p className="mt-2 max-w-md text-sm text-[#64748B]">
+                  We couldn’t find anything matching “{urlSearch || pageTitle}”. Try a different keyword or clear the active filters.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="mt-5 inline-flex items-center justify-center rounded-lg bg-[#E11D48] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#BE185D] cursor-pointer"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <ProductGrid products={paginated} viewMode={viewMode} />
+            )}
 
             {/* Pagination */}
             {!loading && filtered.length > 0 && (

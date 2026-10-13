@@ -18,7 +18,7 @@ const INITIAL_FORM = {
   title: '', category: '', price: '', discount: '0%',
   description: '', quantity: '', tags: '',
   sellerShopeName: '', productImg: '',
-  buyingPrice: '', commission: '',
+  buyingPrice: '', commission: '', locationPricesText: '',
 };
 
 const TAG_OPTIONS = ['flash', 'justforyou', 'popular', 'bestdeal'];
@@ -28,6 +28,13 @@ function calcTotal(buyingPrice, commission) {
   const bp = parseFloat(buyingPrice) || 0;
   const cm = parseFloat(commission) || 0;
   return bp + cm;
+}
+
+function parseLocationPrices(value) {
+  return Object.fromEntries(value.split('\n').map(line => {
+    const [city, price] = line.split('=').map(part => part.trim());
+    return [city, Number(price)];
+  }).filter(([city, price]) => city && Number.isFinite(price) && price > 0));
 }
 
 export default function SellerProductsPage() {

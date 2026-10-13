@@ -248,99 +248,65 @@ function MobileCategoryDrawer({ open, onClose, categories }) {
 /* ─────────────────────────────────────────────
    Hero banner
 ───────────────────────────────────────────── */
-function HeroBanner() {
-  return (
-    <div className="relative flex flex-col justify-between rounded-2xl overflow-hidden flex-1 p-5 md:p-8"
-      style={{
-        background: "linear-gradient(90deg, #D9F0F9 0%, #EDF7FC 50%, #E4F2F9 100%)",
-        border: "1px solid #CFFAFE",
-        minHeight: "280px",
-      }}>
-      <div className="absolute right-[-23px] bottom-[-24px] w-96 h-96 rounded-full pointer-events-none"
-        style={{ background: "rgba(255,255,255,0.4)", filter: "blur(20px)" }} />
-      <div className="absolute right-[100px] top-[41px] w-40 h-40 rounded-full pointer-events-none"
-        style={{ background: "rgba(204,251,241,0.3)", filter: "blur(12px)" }} />
+function HeroBanner({ slides, activeIndex }) {
+  const slide = slides[activeIndex] || slides[0];
 
-      <div className="relative flex items-start justify-between z-10 gap-4">
-        <div className="flex flex-col gap-2 max-w-xs">
+  return (
+    <div className="relative flex flex-col justify-between rounded-2xl overflow-hidden flex-1 p-5 md:p-8 min-h-[280px]"
+      style={{
+        background: `linear-gradient(90deg, rgba(15, 23, 42, 0.52), rgba(14, 116, 144, 0.22)), url(${slide.image}) center/cover no-repeat`,
+        border: "1px solid #E2E8F0",
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/40 via-slate-900/15 to-transparent" />
+      <div className="relative z-10 flex items-end justify-between gap-4 h-full">
+        <div className="flex flex-col gap-2 max-w-xs text-white pb-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-1 px-2 py-[1px] rounded-full text-[11px] font-semibold text-[#164E63]"
-              style={{ background: "rgba(255,255,255,0.8)", border: "1px solid rgba(165,243,252,0.5)" }}>
-              🌿 Natural Ingredients
+            <span className="flex items-center gap-1 px-2 py-[1px] rounded-full text-[11px] font-semibold text-white/90"
+              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}>
+              Natural Ingredients
             </span>
-            <span className="hidden sm:flex items-center gap-1 px-2 py-[1px] rounded-full text-[11px] font-semibold text-[#164E63]"
-              style={{ background: "rgba(255,255,255,0.8)", border: "1px solid rgba(165,243,252,0.5)" }}>
-              ✓ Safe & Gentle
+            <span className="hidden sm:flex items-center gap-1 px-2 py-[1px] rounded-full text-[11px] font-semibold text-white/90"
+              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}>
+              Safe &amp; Gentle
             </span>
           </div>
+
           <div className="flex flex-col gap-0.5 py-1">
-            <span className="text-2xl md:text-[36px] font-bold italic leading-tight text-[#1E293B]" style={{ fontFamily: "Georgia, serif" }}>
-              Natural
+            <span className="text-2xl md:text-[36px] font-bold italic leading-tight text-white" style={{ fontFamily: "Georgia, serif" }}>
+              {slide.titleLine1}
             </span>
-            <span className="text-2xl md:text-[36px] font-extrabold leading-tight text-[#164E63]">Beauty Care</span>
-            <span className="inline-flex items-center px-2 py-[2px] rounded text-[10px] font-bold tracking-[1.1px] uppercase text-[#155E75] w-fit mt-1"
-              style={{ background: "rgba(207,250,254,0.8)" }}>New Product</span>
+            <span className="text-2xl md:text-[36px] font-extrabold leading-tight text-[#C7F9FF]">{slide.titleLine2}</span>
+            <span className="inline-flex items-center px-2 py-[2px] rounded text-[10px] font-bold tracking-[1.1px] uppercase text-white w-fit mt-1"
+              style={{ background: "rgba(14, 116, 144, 0.7)" }}>{slide.badge}</span>
           </div>
-          <p className="hidden sm:block text-xs text-[#475569] leading-5 max-w-[280px]">
-            Discover the goodness of nature for healthy, radiant &amp; glowing skin.
-          </p>
+
+          <p className="hidden sm:block text-xs text-slate-100 leading-5 max-w-[280px]">{slide.description}</p>
+
           <div className="hidden sm:flex flex-wrap gap-2 mt-1">
-            {["🏆 Premium Quality", "✔ Paraben Free", "🧪 Dermatologically Tested"].map((t) => (
-              <span key={t} className="flex items-center px-2 py-[3px] rounded-md text-[10px] font-medium text-[#083344]"
-                style={{ background: "rgba(255,255,255,0.9)", border: "1px solid #CFFAFE" }}>
+            {slide.highlights.map((t) => (
+              <span key={t} className="flex items-center px-2 py-[3px] rounded-md text-[10px] font-medium text-white/90"
+                style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}>
                 {t}
               </span>
             ))}
           </div>
         </div>
-
-        <div className="relative hidden md:flex items-end justify-center w-[180px] lg:w-[210px] h-[180px] lg:h-[208px] shrink-0">
-          <div className="absolute bottom-0 left-3 w-40 h-10 rounded-full"
-            style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(165,243,252,0.6)", boxShadow: "inset 0px 2px 4px 1px rgba(0,0,0,0.05)" }} />
-          <div className="relative z-30 flex flex-col items-center w-10 h-[100px] mr-2">
-            <div className="absolute top-[-14px] left-1/2 -translate-x-1/2 w-4 h-5 rounded-t-full"
-              style={{ background: "#CBD5E1", border: "1px solid #94A3B8" }} />
-            <div className="w-11 h-[100px] rounded-lg flex flex-col items-center justify-center gap-2 p-1"
-              style={{ background: "linear-gradient(0deg,#CFFAFE 0%,#FFFFFF 50%,#ECFEFF 100%)", border: "1px solid #A5F3FC", boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.1)" }}>
-              <span className="text-[6px] font-bold uppercase text-[#155E75] text-center leading-[9px]">NATURAL SKIN</span>
-              <div className="w-7 h-7 rounded-full" style={{ background: "rgba(236,254,255,0.8)" }} />
-            </div>
-          </div>
-          <div className="relative z-40 flex flex-col items-center w-14 h-[130px]">
-            <div className="absolute top-[-18px] left-1/2 -translate-x-1/2 w-4 h-6 rounded-t-lg"
-              style={{ background: "#FBBF24" }} />
-            <div className="w-14 h-[130px] rounded-xl flex flex-col items-center justify-center gap-1 px-1"
-              style={{ background: "linear-gradient(180deg,#FFFFFF 0%,#ECFEFF 50%,#CFFAFE 100%)", border: "1px solid #A5F3FC", boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.1)" }}>
-              <span className="text-[7px] font-extrabold uppercase text-[#164E63] text-center">NATURAL SKIN CARE</span>
-              <div className="w-8 h-2 rounded-full" style={{ background: "rgba(165,243,252,0.5)" }} />
-            </div>
-          </div>
-          <div className="relative z-50 flex flex-col items-center w-14 h-12 ml-1">
-            <div className="absolute top-[-7px] left-0 w-14 h-[12px] rounded-t-md" style={{ background: "#164E63" }} />
-            <div className="w-14 h-12 rounded-lg flex items-center justify-center"
-              style={{ background: "linear-gradient(45deg,#CFFAFE 0%,#FFFFFF 100%)", border: "1px solid #A5F3FC" }}>
-              <span className="text-[6px] font-bold uppercase text-[#164E63]">NATURAL CARE</span>
-            </div>
-          </div>
-          <div className="absolute -top-4 right-0 z-50 w-16 h-16 rounded-full flex flex-col items-center justify-center gap-0.5"
-            style={{ background: "#0D2A4A", border: "2px solid #FFFFFF", boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.1)", transform: "rotate(-6deg)" }}>
-            <span className="text-[8px] font-semibold uppercase text-white">UP TO</span>
-            <span className="text-[16px] font-extrabold leading-none text-[#67E8F9]">50%</span>
-            <span className="text-[7px] text-[#E2E8F0]">OFF</span>
-          </div>
-        </div>
       </div>
 
       <div className="relative z-10 flex items-center justify-between pt-3 mt-3"
-        style={{ borderTop: "1px solid rgba(165,243,252,0.4)" }}>
+        style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}>
         <div className="flex items-center gap-1.5">
-          <span className="w-4 h-1.5 bg-[#F43F5E] rounded-full" />
-          <span className="w-1.5 h-1.5 bg-[#CBD5E1] rounded-full" />
-          <span className="w-1.5 h-1.5 bg-[#CBD5E1] rounded-full" />
+          {slides.map((_, idx) => (
+            <span
+              key={idx}
+              className={`h-1.5 rounded-full transition-all ${idx === activeIndex ? "w-4 bg-[#F43F5E]" : "w-1.5 bg-white/70"}`}
+            />
+          ))}
         </div>
-        <span className="flex items-center gap-1 px-2 py-[1px] rounded-full text-[10px] font-medium text-[#164E63]"
-          style={{ background: "rgba(255,255,255,0.7)" }}>
-          🚚 Fast &amp; Safe Delivery
+        <span className="flex items-center gap-1 px-2 py-[1px] rounded-full text-[10px] font-medium text-white/90"
+          style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}>
+          Fast &amp; Safe Delivery
         </span>
       </div>
     </div>
@@ -351,55 +317,47 @@ function HeroBanner() {
    Right banners
 ───────────────────────────────────────────── */
 function RightBanners() {
+  const sideCards = [
+    {
+      title: "Natural Beauty Care",
+      subtitle: "New Product",
+      image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80",
+      accent: "#0EA5E9",
+    },
+    {
+      title: "Flash Sale",
+      subtitle: "Up to 60% Off",
+      image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=900&q=80",
+      accent: "#10B981",
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-3 w-full sm:w-[240px] lg:w-[301px] shrink-0">
-      <div className="flex items-center justify-between rounded-2xl flex-1 px-4 py-8 sm:py-12"
-        style={{ background: "linear-gradient(90deg,#DFF2FA 0%,#EAF7FD 100%)", border: "1px solid #CFFAFE" }}>
-        <div className="flex flex-col gap-1 max-w-[120px]">
-          <span className="text-[16px] font-bold italic text-[#1E293B]" style={{ fontFamily: "Georgia, serif" }}>Natural</span>
-          <span className="text-[16px] font-extrabold text-[#164E63]">Beauty Care</span>
-          <span className="text-[9px] font-bold uppercase tracking-[0.45px] text-[#155E75]">New Product</span>
-          <p className="text-[9px] text-[#64748B] leading-[11px]">Radiant &amp; fresh herbal items.</p>
-        </div>
-        <div className="flex flex-col items-center gap-1 w-12">
-          <div className="w-11 h-11 rounded-full flex flex-col items-center justify-center" style={{ background: "#164E63" }}>
-            <span className="text-[6px] uppercase text-white">UP TO</span>
-            <span className="text-[11px] font-bold text-[#67E8F9]">50%</span>
-            <span className="text-[5px] text-white">OFF</span>
-          </div>
-          <div className="flex items-end gap-1">
-            <div className="w-3 h-9 rounded-t" style={{ background: "#FFFFFF", border: "1px solid #A5F3FC" }} />
-            <div className="w-4 h-11 rounded-t" style={{ background: "#CFFAFE", border: "1px solid #A5F3FC" }} />
-          </div>
-        </div>
-      </div>
-
-      <div className="relative flex items-center justify-between rounded-2xl overflow-hidden flex-1 px-4 py-6 sm:py-9"
-        style={{ background: "linear-gradient(135deg,#FAFCF9 0%,#F2FAEE 50%,#E4F5DF 100%)", border: "1px solid #D1FAE5" }}>
-        <span className="absolute right-2 top-2 text-2xl font-black text-[#FBBF24] opacity-30 select-none">⚡</span>
-        <div className="flex flex-col gap-0.5 z-10">
-          <span className="text-[9px] font-extrabold uppercase tracking-[0.5px] text-[#D97706]">⚡ LIMITED TIME</span>
-          <div className="flex flex-col pb-1">
-            <span className="text-[20px] font-extrabold italic text-[#0F172A] leading-6">FLASH</span>
-            <span className="text-[20px] font-extrabold italic text-[#0F172A] leading-6">SALE</span>
-          </div>
-          <span className="inline-flex px-1.5 py-[1px] rounded text-[9px] font-bold text-white bg-[#0F172A] w-fit">UP TO 60% OFF</span>
-          <div className="pt-2">
-            <button className="inline-flex items-center gap-1 px-2 py-1 rounded text-[9px] font-bold text-white bg-[#059669] hover:bg-[#047857] transition-colors cursor-pointer">
-              SHOP NOW <ArrowRight size={9} strokeWidth={1.5} />
-            </button>
+      {sideCards.map((card) => (
+        <div
+          key={card.title}
+          className="relative flex items-end rounded-2xl overflow-hidden flex-1 min-h-[160px] px-4 py-4"
+          style={{
+            background: `linear-gradient(135deg, rgba(15,23,42,0.15), rgba(14,165,233,0.12)), url(${card.image}) center/cover no-repeat`,
+            border: "1px solid #E2E8F0",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/10 to-transparent" />
+          <div className="relative z-10 flex w-full items-end justify-between gap-3 text-white">
+            <div className="flex flex-col gap-1">
+              <span className="text-[13px] font-semibold text-white/90">{card.title}</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.5px] text-white/80">{card.subtitle}</span>
+            </div>
+            <div
+              className="rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-[0.5px]"
+              style={{ background: card.accent, color: "#fff" }}
+            >
+              50%+
+            </div>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-1 z-10">
-          <div className="w-11 h-11 rounded-full flex flex-col items-center justify-center"
-            style={{ background: "#FBBF24", border: "2px solid #FFFFFF" }}>
-            <span className="text-[6px] font-extrabold text-[#020617]">BIGGEST</span>
-            <span className="text-[11px] font-extrabold text-[#020617]">60%</span>
-            <span className="text-[6px] font-extrabold text-[#020617]">DEALS</span>
-          </div>
-          <div className="flex items-center gap-1 text-xl"><span>🎒</span><span>👟</span></div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
@@ -421,7 +379,43 @@ const NAV_LINKS = [
 ───────────────────────────────────────────── */
 export default function HeroSection() {
   const [mobileDrawer, setMobileDrawer] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
   const categories = useNavCategories();
+
+  const slides = [
+    {
+      image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80",
+      titleLine1: "Natural",
+      titleLine2: "Beauty Care",
+      badge: "New Product",
+      description: "Discover the goodness of nature for healthy, radiant and glowing skin.",
+      highlights: ["Premium Quality", "Paraben Free", "Dermatologically Tested"],
+    },
+    {
+      image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1200&q=80",
+      titleLine1: "Glow Up",
+      titleLine2: "Daily Ritual",
+      badge: "Best Seller",
+      description: "Gentle formulas that support hydration, repair and luminosity every day.",
+      highlights: ["Vegan", "Cruelty Free", "No Harsh Chemicals"],
+    },
+    {
+      image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1200&q=80",
+      titleLine1: "Skin First",
+      titleLine2: "Self Care",
+      badge: "Fresh Picks",
+      description: "Thoughtful beauty essentials with botanicals, vitamins and hydration boosters.",
+      highlights: ["Hydrating", "Nourishing", "Gentle Care"],
+    },
+  ];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => window.clearInterval(interval);
+  }, [slides.length]);
 
   return (
     <div className="w-full">
@@ -465,7 +459,7 @@ export default function HeroSection() {
             </nav>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <HeroBanner />
+              <HeroBanner slides={slides} activeIndex={activeSlide} />
               <RightBanners />
             </div>
           </div>
