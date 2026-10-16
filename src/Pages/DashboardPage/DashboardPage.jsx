@@ -195,6 +195,72 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Recent orders */}
+      <section className="bg-white border border-gray-100 rounded-xl shadow-sm p-5 flex flex-col gap-3">
+        <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+          <h2 className="text-sm font-semibold text-gray-800" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Recent Orders
+          </h2>
+          <button type="button" onClick={() => navigate('/dashboard/orders')}
+            className="flex items-center gap-0.5 text-[11px] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer transition-colors"
+            style={{ fontFamily: "'Inter', sans-serif" }}>
+            View all <ChevronRight size={11} />
+          </button>
+        </div>
+        {loadingData ? (
+          <div className="flex flex-col gap-2">
+            {[1, 2].map((i) => <div key={i} className="h-14 animate-pulse bg-gray-50 rounded-lg" />)}
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="flex flex-col items-center py-4 gap-2">
+            <Eye size={20} strokeWidth={1.5} className="text-gray-200" />
+            <p className="text-xs text-gray-400 text-center" style={{ fontFamily: "'Inter', sans-serif" }}>
+              No orders yet
+            </p>
+          </div>
+        ) : (
+          <ul className="divide-y divide-gray-100">
+            {orders.slice(0, 3).map((order) => (
+              <li key={order._id} className="flex flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex -space-x-2 shrink-0">
+                    {(order.items || []).slice(0, 3).map((item, index) => (
+                      item.image ? (
+                        <img key={`${order._id}-${index}`} src={item.image} alt=""
+                          className="h-9 w-9 rounded-full border-2 border-white object-cover" />
+                      ) : (
+                        <span key={`${order._id}-${index}`} className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-gray-100">
+                          <Package size={14} className="text-gray-400" />
+                        </span>
+                      )
+                    ))}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-mono text-[10px] text-gray-400">#{order._id?.slice(-6).toUpperCase()}</p>
+                    <p className="text-xs font-semibold text-gray-700 truncate">
+                      {(order.items || []).slice(0, 2).map((item) => item.name).filter(Boolean).join(', ') || 'Order items'}
+                      {(order.items || []).length > 2 ? ` +${order.items.length - 2} more` : ''}
+                    </p>
+                    <p className="text-[11px] text-gray-400">
+                      {(order.items || []).reduce((count, item) => count + (Number(item.qty) || 0), 0)} items
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-3 sm:justify-end">
+                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold border
+                    ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : order.status === 'cancelled' ? 'bg-red-50 text-red-600 border-red-200'
+                      : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
+                    {order.status}
+                  </span>
+                  <span className="text-xs font-bold text-gray-700">${(order.subtotal || 0).toFixed(2)}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       {/* Lower grid */}
       <div className="flex flex-col xl:flex-row gap-5">
 
@@ -299,48 +365,6 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Recent orders */}
-          <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-5 flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-800" style={{ fontFamily: "'Inter', sans-serif" }}>
-                Recent Orders
-              </h3>
-              {orders.length > 0 && (
-                <button type="button" onClick={() => navigate('/dashboard/orders')}
-                  className="flex items-center gap-0.5 text-[11px] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer transition-colors"
-                  style={{ fontFamily: "'Inter', sans-serif" }}>
-                  View all <ChevronRight size={11} />
-                </button>
-              )}
-            </div>
-            {loadingData ? (
-              <div className="flex flex-col gap-2">
-                {[1,2].map(i => <div key={i} className="h-10 animate-pulse bg-gray-50 rounded-lg" />)}
-              </div>
-            ) : orders.length === 0 ? (
-              <div className="flex flex-col items-center py-4 gap-2">
-                <Eye size={20} strokeWidth={1.5} className="text-gray-200" />
-                <p className="text-xs text-gray-400 text-center" style={{ fontFamily: "'Inter', sans-serif" }}>
-                  No orders yet
-                </p>
-              </div>
-            ) : (
-              <ul className="flex flex-col gap-2">
-                {orders.slice(0,3).map(o => (
-                  <li key={o._id} className="flex items-center justify-between gap-2 text-xs py-1">
-                    <span className="font-mono text-gray-400">#{o._id?.slice(-6).toUpperCase()}</span>
-                    <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold border
-                      ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                        : o.status === 'cancelled' ? 'bg-red-50 text-red-600 border-red-200'
-                        : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
-                      {o.status}
-                    </span>
-                    <span className="font-bold text-gray-700">${(o.subtotal || 0).toFixed(2)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
         </div>
       </div>
 

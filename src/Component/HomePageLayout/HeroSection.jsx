@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ChevronRight, Menu, AlignJustify, ArrowRight, X, Package,
+  ChevronRight, Menu, AlignJustify, X, Package,
 } from "lucide-react";
 import { useNavCategories } from "../../data/categories";
 
@@ -248,66 +248,33 @@ function MobileCategoryDrawer({ open, onClose, categories }) {
 /* ─────────────────────────────────────────────
    Hero banner
 ───────────────────────────────────────────── */
-function HeroBanner({ slides, activeIndex }) {
-  const slide = slides[activeIndex] || slides[0];
-
+function HeroBanner({ slides, activeIndex, onSlideChange }) {
   return (
-    <div className="relative flex flex-col justify-between rounded-2xl overflow-hidden flex-1 p-5 md:p-8 min-h-[280px]"
-      style={{
-        background: `linear-gradient(90deg, rgba(15, 23, 42, 0.52), rgba(14, 116, 144, 0.22)), url(${slide.image}) center/cover no-repeat`,
-        border: "1px solid #E2E8F0",
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/40 via-slate-900/15 to-transparent" />
-      <div className="relative z-10 flex items-end justify-between gap-4 h-full">
-        <div className="flex flex-col gap-2 max-w-xs text-white pb-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-1 px-2 py-[1px] rounded-full text-[11px] font-semibold text-white/90"
-              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}>
-              Natural Ingredients
-            </span>
-            <span className="hidden sm:flex items-center gap-1 px-2 py-[1px] rounded-full text-[11px] font-semibold text-white/90"
-              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)" }}>
-              Safe &amp; Gentle
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-0.5 py-1">
-            <span className="text-2xl md:text-[36px] font-bold italic leading-tight text-white" style={{ fontFamily: "Georgia, serif" }}>
-              {slide.titleLine1}
-            </span>
-            <span className="text-2xl md:text-[36px] font-extrabold leading-tight text-[#C7F9FF]">{slide.titleLine2}</span>
-            <span className="inline-flex items-center px-2 py-[2px] rounded text-[10px] font-bold tracking-[1.1px] uppercase text-white w-fit mt-1"
-              style={{ background: "rgba(14, 116, 144, 0.7)" }}>{slide.badge}</span>
-          </div>
-
-          <p className="hidden sm:block text-xs text-slate-100 leading-5 max-w-[280px]">{slide.description}</p>
-
-          <div className="hidden sm:flex flex-wrap gap-2 mt-1">
-            {slide.highlights.map((t) => (
-              <span key={t} className="flex items-center px-2 py-[3px] rounded-md text-[10px] font-medium text-white/90"
-                style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}>
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="relative z-10 flex items-center justify-between pt-3 mt-3"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}>
-        <div className="flex items-center gap-1.5">
-          {slides.map((_, idx) => (
-            <span
-              key={idx}
-              className={`h-1.5 rounded-full transition-all ${idx === activeIndex ? "w-4 bg-[#F43F5E]" : "w-1.5 bg-white/70"}`}
-            />
-          ))}
-        </div>
-        <span className="flex items-center gap-1 px-2 py-[1px] rounded-full text-[10px] font-medium text-white/90"
-          style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}>
-          Fast &amp; Safe Delivery
-        </span>
+    <div className="relative min-h-[280px] flex-1 overflow-hidden rounded-2xl border border-[#E2E8F0]">
+      {slides.map((slide, index) => (
+        <img
+          key={slide.image}
+          src={slide.image}
+          alt=""
+          aria-hidden="true"
+          className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-in-out ${
+            index === activeIndex ? "scale-100 opacity-100" : "scale-105 opacity-0"
+          }`}
+        />
+      ))}
+      <div className="absolute inset-x-0 bottom-4 z-10 flex justify-center gap-2">
+        {slides.map((slide, index) => (
+          <button
+            key={slide.image}
+            type="button"
+            onClick={() => onSlideChange(index)}
+            aria-label={`Show slide ${index + 1}`}
+            aria-current={index === activeIndex ? "true" : undefined}
+            className={`h-2.5 rounded-full border border-white/80 transition-all ${
+              index === activeIndex ? "w-7 bg-white" : "w-2.5 bg-white/50 hover:bg-white/80"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
@@ -385,27 +352,12 @@ export default function HeroSection() {
   const slides = [
     {
       image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80",
-      titleLine1: "Natural",
-      titleLine2: "Beauty Care",
-      badge: "New Product",
-      description: "Discover the goodness of nature for healthy, radiant and glowing skin.",
-      highlights: ["Premium Quality", "Paraben Free", "Dermatologically Tested"],
     },
     {
       image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1200&q=80",
-      titleLine1: "Glow Up",
-      titleLine2: "Daily Ritual",
-      badge: "Best Seller",
-      description: "Gentle formulas that support hydration, repair and luminosity every day.",
-      highlights: ["Vegan", "Cruelty Free", "No Harsh Chemicals"],
     },
     {
       image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1200&q=80",
-      titleLine1: "Skin First",
-      titleLine2: "Self Care",
-      badge: "Fresh Picks",
-      description: "Thoughtful beauty essentials with botanicals, vitamins and hydration boosters.",
-      highlights: ["Hydrating", "Nourishing", "Gentle Care"],
     },
   ];
 
@@ -459,7 +411,7 @@ export default function HeroSection() {
             </nav>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <HeroBanner slides={slides} activeIndex={activeSlide} />
+              <HeroBanner slides={slides} activeIndex={activeSlide} onSlideChange={setActiveSlide} />
               <RightBanners />
             </div>
           </div>

@@ -60,15 +60,18 @@ export default function ProductsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlCategory, urlBrand, urlTag]);
 
+  const searchMatchedProducts = useMemo(() => {
+    if (!urlSearch) return allProducts;
+    const query = urlSearch.toLowerCase();
+    return allProducts.filter((product) =>
+      [product.title, product.name, product.description, product.category, product.brand]
+        .some((value) => String(value || "").toLowerCase().includes(query))
+    );
+  }, [allProducts, urlSearch]);
+
   // ── Apply filters ─────────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
-    let list = [...allProducts];
-
-    if (urlSearch) {
-      const query = urlSearch.toLowerCase();
-      list = list.filter((p) => [p.title, p.name, p.description, p.category, p.brand]
-        .some((value) => String(value || "").toLowerCase().includes(query)));
-    }
+    let list = [...searchMatchedProducts];
 
     // URL tag pre-filter (flash, popular, etc.)
     if (urlTag) list = list.filter((p) => (p.tags || []).includes(urlTag));
@@ -105,7 +108,7 @@ export default function ProductsPage() {
       new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
     return list;
-  }, [allProducts, filters, urlTag, urlSearch]);
+  }, [searchMatchedProducts, filters, urlTag]);
 
   // ── Pagination ────────────────────────────────────────────────────────────────
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -122,10 +125,10 @@ export default function ProductsPage() {
     return nums;
   };
 
-  const handleClear = () => setFilters((f) => ({
+  const handleClear = () => setFilters({
     ...DEFAULT_FILTERS,
     price: { min: 0, max: priceMax },
-  }));
+  });
 
   const pageTitle = urlSearch ? `Search: ${urlSearch}` : urlCategory || (urlTag ? `${urlTag.charAt(0).toUpperCase() + urlTag.slice(1)} Sale` : "All Products");
 
@@ -147,7 +150,7 @@ export default function ProductsPage() {
     filters,
     setFilters: (v) => { setFilters(v); setPage(1); },
     onClear: handleClear,
-    products: allProducts,
+    products: searchMatchedProducts,
     priceMax,
   };
 

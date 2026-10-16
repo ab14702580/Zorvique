@@ -140,13 +140,6 @@ export default function MainHeader() {
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
 
-  useEffect(() => {
-    const query = searchTerm.trim();
-    if (!query) return;
-    const timer = setTimeout(() => navigate(`/products?q=${encodeURIComponent(query)}`), 300);
-    return () => clearTimeout(timer);
-  }, [searchTerm, navigate]);
-
   /* ── sticky + shadow on scroll ── */
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
